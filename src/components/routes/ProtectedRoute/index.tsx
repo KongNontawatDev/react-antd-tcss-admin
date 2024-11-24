@@ -10,7 +10,7 @@ export default function ProtectedRoute() {
 
   return (
     <div>
-      <header>Protected Header</header>
+      <header></header>
       <Outlet />
     </div>
   );

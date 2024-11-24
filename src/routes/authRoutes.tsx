@@ -1,19 +1,41 @@
 import { lazy } from 'react';
-import AuthLayout from '../components/layouts/AuthLayout';
 import PublicRoute from '../components/routes/PublicRoute';
-import {withSuspense} from '../utils/withSuspense';
+import { withSuspense } from '../utils/withSuspense';
 import AuthLayoutLoading from '../components/layouts/AuthLayout/loading';
+import { ErrorBoundaryWrapper } from '../components/error';
 
-const Login = withSuspense(lazy(() => import('../pages/login')), <AuthLayoutLoading />);
+const AuthLayoutWithSuspense = withSuspense(
+  lazy(() => import('../components/layouts/AuthLayout')),
+  <AuthLayoutLoading />
+);
+
+const Login = withSuspense(
+  lazy(() => import('../pages/login')),
+  <AuthLayoutLoading />
+);
 
 const authRoutes = {
   path: 'auth',
   element: <PublicRoute />,
+  errorElement: (
+    <ErrorBoundaryWrapper>
+      <AuthLayoutLoading />
+    </ErrorBoundaryWrapper>
+  ),
   children: [
     {
-      element: <AuthLayout />,
+      element: (
+        <AuthLayoutWithSuspense>
+          <ErrorBoundaryWrapper>
+            <AuthLayoutLoading />
+          </ErrorBoundaryWrapper>
+        </AuthLayoutWithSuspense>
+      ),
       children: [
-        { path: 'login', element: <Login /> },
+        {
+          path: 'login',
+          element: <Login />,
+        },
       ],
     },
   ],

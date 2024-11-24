@@ -1,9 +1,14 @@
-import { Suspense } from "react";
+import React, { ComponentType, Suspense } from "react";
 
-export const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType>, Fallback: React.ReactNode) => {
-  return () => (
-    <Suspense fallback={Fallback}>
-      <Component />
-    </Suspense>
-  );
-};
+export function withSuspense<T extends object>(
+  Component: ComponentType<T>,
+  fallback: React.ReactNode
+): ComponentType<T> {
+  return function (props: T) {
+    return (
+      <Suspense fallback={fallback}>
+        <Component {...props} />
+      </Suspense>
+    );
+  };
+}
